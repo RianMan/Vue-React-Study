@@ -8,7 +8,7 @@ module.exports = (env) => {
             path: path.join(__dirname,'dist'),
             filename:'main.js'
         },
-        
+        devtool:'source-map',
         devServer:{
             contentBase:path.join(__dirname,'dist'),
             open: true,

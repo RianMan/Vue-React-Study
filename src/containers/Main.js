@@ -3,6 +3,9 @@ import {HashRouter as Router,Route ,Link} from 'react-router-dom';
 // import {HashRouter as Router,Route,Link} from '../../react-router-dom';
 import Home from './Home';
 import User from './User';
+import Counter from '../component/Counter'
+import TodoList from '../component/Todo'
+
 
 
 function Main(){
@@ -15,6 +18,10 @@ function Main(){
             <br />
             <Route path='/home' render={props => <Home {...props} />} />
             <Route path='/user' component={User} />
+            <Counter />
+            <br />
+            <br />
+            <TodoList />
         </Router>
     )
 }
