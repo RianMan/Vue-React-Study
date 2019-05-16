@@ -1,30 +1,30 @@
-function CreateStore(reducer,preState){
+function createStore(preState,reducer){
     let state = preState;
     let listeners = [];
 
-    //给外面提供获取内部state的方法
     function getState(){
         return state;
     }
 
-     //添加事件监听，当调用dispatch的时候触发函数执行
-     // 返回一个取消事件监听的函数 
     function subscribe(fn){
         listeners.push(fn);
+        //返回一个取消监听的方法
         return function(){
-            listeners = listeners.filter(v => v!=fn);
+            listeners = listeners.filter(v => v !==fn);
         }
     }
 
-    // 调用一次 让state有一个默认值
-    dispatch({ type: '@@redux/INIT' });
-    //调用action的改变去触发reducer的变化
+    // 调用一次确保第一次的时候有初始状态
+    dispatch({type:'0oooo'})
     function dispatch(action){
-        state = reducer(state,action);
-        listeners.forEach((listener) => listener());
+        // 接受一个state和action，返回处理后的state
+        state = reducer(state,action)
+        listeners.forEach(fn => fn());
     }
 
-    return {getState,dispatch,subscribe}
+    return {
+        getState,subscribe,dispatch
+    }
 }
 
-export default CreateStore;
+export default createStore;

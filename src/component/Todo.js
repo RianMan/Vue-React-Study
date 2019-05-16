@@ -1,30 +1,28 @@
 import React,{Component} from 'react';
-import store from '../store';
+import store from '../store/store';
+import todoAction from '../store/todo-actions';
+import { bindActionCreator } from '../../redux';
 
-console.log(store.getState().todo)
+let newActions = bindActionCreator(todoAction,store.dispatch)
 
+console.log(store.getState())
 class TodoList extends Component{
 
     state = {
-        list: store.getState().todo.items,
+        list: store.getState().todo
     }
 
-    componentDidMount(){
-        this.unsubscribe = store.subscribe(()=>{
-            this.setState({list: store.getState().todo.items })
+    componentWillMount(){
+        store.subscribe(()=>{
+            this.setState({
+                list: store.getState().todo
+            })
         })
     }
 
-    componentWillUnmount(){
-        this.unsubscribe();
-    }
-
     handleInput = (e) => {
-        if(e && e.keyCode === 13){
-            store.dispatch({
-                type: 'ADDITEM',
-                content: e.target.value
-            })
+        if(e.keyCode === 13){
+            newActions.addItemAction(e.target.value)
         }
     }
 
@@ -37,12 +35,9 @@ class TodoList extends Component{
                 <ul>
                     {list && list.map((v,index)=> 
                     <li key={index}> 
-                        {v.content} &nbsp;&nbsp;&nbsp;
+                        {v} &nbsp;&nbsp;&nbsp;
                         <i onClick={()=>{
-                            store.dispatch({
-                                type: 'DELITEM',
-                                index: index
-                            })
+                            newActions.delItemAction(index)
                         }}>删除</i> 
                     </li>)}
                 </ul>

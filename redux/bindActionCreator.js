@@ -1,13 +1,16 @@
-export default (action,dispatch) => {
-    console.log(action,'action')
-    let newAction = {}
-    for (const key in action) {
-        if (action.hasOwnProperty(key)) {
-            const element = action[key];
-            newAction[key] = function(){
-                dispatch(element.apply(this, arguments))
+export default function(actions,dispatch){
+    let obj = {};
+    for (const key in actions) {
+        if (actions.hasOwnProperty(key)) {
+            obj[key] = function(){
+                if(typeof actions[key] === 'function'){
+                    dispatch(actions[key].apply(null,arguments))
+                }
+                if(typeof actions[key] === 'object'){
+                    dispatch(actions[key])
+                }
             }
         }
     }
-    return newAction;
+    return obj;
 }
