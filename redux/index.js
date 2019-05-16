@@ -1,9 +1,9 @@
-import CreateStore from './CreateStore';
-import CombineReducer from './CombineReducer';
+import createStore from './createStore';
+import combineReducers from './combineReducers';
 import bindActionCreator from './bindActionCreator';
 
 export {
-    CombineReducer,
-    CreateStore,
+    createStore,
+    combineReducers,
     bindActionCreator,
 }

@@ -1,9 +1,10 @@
 import React,{Component} from 'react';
-import store from '../store';
-import counter from '../actions/counter';
-import {bindActionCreator} from '../../redux'
+import store from '../store/store';
+import actions from '../store/counter-actions';
+import {bindActionCreator} from '../../redux';
 
-let newAction = bindActionCreator(counter,store.dispatch)
+let actionsObj = bindActionCreator(actions,store.dispatch)
+
 
 class Counter extends Component{
 
@@ -11,14 +12,8 @@ class Counter extends Component{
         number: store.getState().counter.number,
     }
 
-    componentDidMount(){
-        this.unsubscribe = store.subscribe(()=>{
-            this.setState({number: store.getState().counter.number })
-        })
-    }
-
-    componentWillUnmount(){
-        this.unsubscribe();
+    componentWillMount(){
+        store.subscribe(() => {this.setState({number:store.getState().counter.number})})
     }
 
     render(){
@@ -26,8 +21,8 @@ class Counter extends Component{
         return (
             <div>
                 <h4>{number}</h4>
-                <button onClick={newAction.increment}>加</button>
-                <button onClick={newAction.decrement}>减</button>
+                <button onClick={actionsObj.increment}>加</button>
+                <button onClick={actionsObj.decrement}>减</button>
             </div>
         )
     }
