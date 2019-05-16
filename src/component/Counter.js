@@ -1,28 +1,25 @@
 import React,{Component} from 'react';
-import store from '../store/store';
+import PropTypes from 'prop-types';
+import connect from '../redux-react/connect';
 import actions from '../store/counter-actions';
-import {bindActionCreator} from '../../redux';
 
-let actionsObj = bindActionCreator(actions,store.dispatch)
-
-
+@connect(state=> (state.counter),actions)
 class Counter extends Component{
 
-    state = {
-        number: store.getState().counter.number,
+    static propTypes = {
+        number: PropTypes.number.isRequired,
+        increment:  PropTypes.func.isRequired,
+        decrement:  PropTypes.func.isRequired,
     }
 
-    componentWillMount(){
-        store.subscribe(() => {this.setState({number:store.getState().counter.number})})
-    }
 
     render(){
-        const { number } = this.state;
+        const { number } = this.props;
         return (
             <div>
                 <h4>{number}</h4>
-                <button onClick={actionsObj.increment}>加</button>
-                <button onClick={actionsObj.decrement}>减</button>
+                <button onClick={this.props.increment}>加</button>
+                <button onClick={this.props.decrement}>减</button>
             </div>
         )
     }
