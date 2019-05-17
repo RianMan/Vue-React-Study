@@ -3,7 +3,7 @@
 1. HashRouer
     - 基于html5的history的原理实现的  window.addEventListener('hashchange',callback);
 
-    - 它是外层的夫组件，下面包含一些子组件，让自组件通过逻辑的判断去实现页面的展示；
+    - 它是外层的父组件，下面包含一些子组件，让自组件通过逻辑的判断去实现页面的展示；
 
     - 在这个router体系里面有三个属性，location，match，history,所以我们自己去实现的时候先去把这三个属性挂载context上面去,那么我们在自组件就可以通过this.context拿到他们的值
     ```
