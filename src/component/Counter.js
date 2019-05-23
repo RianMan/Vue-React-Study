@@ -10,6 +10,7 @@ class Counter extends Component{
         number: PropTypes.number.isRequired,
         increment:  PropTypes.func.isRequired,
         decrement:  PropTypes.func.isRequired,
+        delayIncrement: PropTypes.func.isRequired,
     }
 
 
@@ -20,6 +21,7 @@ class Counter extends Component{
                 <h4>{number}</h4>
                 <button onClick={this.props.increment}>加</button>
                 <button onClick={this.props.decrement}>减</button>
+                <button onClick={this.props.delayIncrement}>过一秒再加1</button>
             </div>
         )
     }

@@ -7,7 +7,6 @@ const initState = {
 export default function(state = initState,action){
     switch (action.type) {
         case types.INCREMENT:
-             console.log(action.type)
             return {...state,number:state.number + 1}
         case types.DECREMENT:
             return {...state,number:state.number - 1}

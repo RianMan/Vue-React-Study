@@ -27,7 +27,6 @@ function connect(mapToState,mapDispatchToProps){
 
             render(){
                 let actionsObj = {};
-                console.log(mapDispatchToProps)
                 actionsObj  = bindActionCreator(mapDispatchToProps, this.store.dispatch)
                 return <WarpedComponent {... this.state} {...actionsObj} />
             }
