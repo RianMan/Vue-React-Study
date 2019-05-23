@@ -1,34 +1,29 @@
 import React,{Component} from 'react';
-import store from '../store/store';
+// import store from '../store/store';
+import PropTypes from 'prop-types'
+import connect from '../redux-react/connect';
 import todoAction from '../store/todo-actions';
-import { bindActionCreator } from '../../redux';
+// import { bindActionCreator } from '../../redux';
 
-let newActions = bindActionCreator(todoAction,store.dispatch)
-
-console.log(store.getState())
+// let newActions = bindActionCreator(todoAction,store.dispatch)
+@connect(state=>state.todo,todoAction)
 class TodoList extends Component{
 
-    state = {
-        list: store.getState().todo
+    static propTypes ={
+        list: PropTypes.array,
+        addItemAction: PropTypes.func,
+        delItemAction: PropTypes.func,
     }
 
-    componentWillMount(){
-        store.subscribe(()=>{
-            this.setState({
-                list: store.getState().todo
-            })
-        })
-    }
 
     handleInput = (e) => {
         if(e.keyCode === 13){
-            newActions.addItemAction(e.target.value)
+            this.props.addItemAction(e.target.value)
         }
     }
 
     render(){
-        const { list } = this.state;
-        console.log(list)
+        const  {list}  = this.props;
         return (
             <div>
                 <input onKeyDown={this.handleInput} />
@@ -37,7 +32,7 @@ class TodoList extends Component{
                     <li key={index}> 
                         {v} &nbsp;&nbsp;&nbsp;
                         <i onClick={()=>{
-                            newActions.delItemAction(index)
+                            this.props.delItemAction(index)
                         }}>删除</i> 
                     </li>)}
                 </ul>
