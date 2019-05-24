@@ -2,7 +2,7 @@ import React,{Component} from 'react';
 import {HashRouter as Router,Route ,Link} from 'react-router-dom';
 // import {HashRouter as Router,Route,Link} from '../../react-router-dom';
 import Home from './Home';
-import User from './User';
+import User from '../component/User';
 import Counter from '../component/Counter'
 import TodoList from '../component/Todo'
 import Provider from '../redux-react/Provider';
@@ -22,6 +22,7 @@ function Main(){
                 <Route path='/user' component={User} />
                 <Counter />
                 <br />
+                <User />
                 <br />
                 <TodoList />
             </Router>
