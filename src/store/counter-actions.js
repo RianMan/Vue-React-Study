@@ -8,11 +8,6 @@ export default {
         return {type: types.DECREMENT}
     },
     delayIncrement(){
-        return function(dispatch){
-            setTimeout(() => {
-                console.log(dispatch.toLocaleString(),'[][]')
-                return dispatch({type: types.INCREMENT})
-            }, 1000);
-        }
+        return {type: types.DELAY_INCREMENT}
     }
 }

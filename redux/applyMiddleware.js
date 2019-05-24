@@ -1,4 +1,5 @@
-export default function(middleware){
+import compose from './compose';
+export default function(...middlewares){
     return function(createStore){
         return function(reducres){
             let store = createStore(reducres,{});
@@ -7,8 +8,8 @@ export default function(middleware){
                 getState: store.getState,
                 dispatch: action => dispatch(action)
             }
-            middleware = middleware(middlewareApi);
-            dispatch = middleware(store.dispatch);
+            middlewares = middlewares.map(mid => mid(middlewareApi));
+            dispatch = compose(...middlewares)(store.dispatch);
             return {...store,dispatch}
         }
     }
