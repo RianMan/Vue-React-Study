@@ -16,6 +16,7 @@ class Counter extends Component{
 
     render(){
         const { number } = this.props;
+        console.log(number)
         return (
             <div>
                 <h4>{number}</h4>
