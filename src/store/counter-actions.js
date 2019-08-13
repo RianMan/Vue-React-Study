@@ -8,6 +8,13 @@ export default {
         return {type: types.DECREMENT}
     },
     delayIncrement(){
-        return {type: types.DELAY_INCREMENT}
+        return (dispatch) => {
+            setTimeout(()=>{
+                dispatch({
+                    type: types.INCREMENT
+                })
+            },1000)
+        }
+        
     }
 }
