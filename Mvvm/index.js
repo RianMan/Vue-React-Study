@@ -1,14 +1,35 @@
 //观察者
 //发布订阅
 class Dep{
-    
+    constructor(){
+        this.watchers = [];
+    }
+    addListeners(watcher){
+        this.watchers.push(watcher)
+    }
+    notify(){
+        this.watchers.forEach(watcher => watcher.run())
+    }
 }
 
 //观察者
 class Watcher{
+    constructor(data,expr,cb){
+        this.expr = expr;
+        this.data = data;
+        this.cb = cb;
+        Dep.target = this;
+        this.oldVal = CompileUtil.getVal(this.data,expr);
+        Dep.target = null;
+    }
 
+    run(){
+        let newVal = CompileUtil.getVal(this.data, this.expr);
+        if(this.oldVal !== newVal){
+            this.cb(newVal);
+        }
+    }
 }
-
 
 //数据拦截
 class Observer{
@@ -22,21 +43,27 @@ class Observer{
         if(data && typeof data === 'object'){
             for (const key in data) {
                 if (data.hasOwnProperty(key)) {
-                    this.dataIntercept(key,data[key]);
+                    this.dataIntercept(data,key,data[key]);
                 }
             }
         }
     }
     
     // 数据劫持
-    dataIntercept(key,oldVal){
+    dataIntercept(data,key,oldVal){
         this.observe(oldVal)
-        Object.defineProperty(this.data, key,{
+        let dep = new Dep();
+        Object.defineProperty(data, key,{
             get: () => {
+                Dep.target && dep.addListeners(Dep.target)
                 return oldVal
             },
             set: (newVal) => {
-                oldVal = newVal
+                if(oldVal != newVal){
+                    this.observe(newVal)
+                    oldVal = newVal;
+                    dep.notify()
+                }
             }
         });
     }
@@ -94,7 +121,10 @@ class Compiler{
 
     // 转换指令元素类
     handleElementNode(attr,val,node){
-        let value = this.getVal(val);
+        new Watcher(this.data,val,(newVal)=>{
+            CompileUtil[dir](node,newVal)
+        })
+        let value = CompileUtil.getVal(this.data,val);
         let [,dir] = attr.split('-');
         CompileUtil[dir](node,value)
     }
@@ -103,19 +133,15 @@ class Compiler{
     handleTextNode(val,node){
         let reg = /\{\{(.+?)\}\}/;
         let newVal = val.replace(reg, (...arg) => {
-            return this.getVal(arg[1])
+            new Watcher(this.data,arg[1],(newVal)=>{
+                node.textContent = newVal;
+            })
+            return CompileUtil.getVal(this.data,arg[1])
         });
-        console.log(node)
         node.textContent = newVal;
     }
 
-    // 根据传入的表达式获取data的数据
-    getVal(expr){
-        let data = this.data;
-        return expr.split('.').reduce((pre,cur)=>{
-            return pre[cur]
-        },data)
-    }
+    
 }
 
 CompileUtil = {
@@ -124,6 +150,12 @@ CompileUtil = {
     },
     html(){},
     text(){},
+    // 根据传入的表达式获取data的数据
+    getVal(data,expr){
+        return expr.split('.').reduce((pre,cur)=>{
+            return pre[cur]
+        },data)
+    }
 }
 
 class Vue{
@@ -132,7 +164,6 @@ class Vue{
         this.$data = options.data;
         if(this.$el){
             new Observer(this.$data)
-            console.log(this.$data)
             new Compiler(this.$el,this.$data,this)
         }
     }
