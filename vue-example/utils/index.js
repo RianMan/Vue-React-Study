@@ -9,12 +9,16 @@ export const transformTimeStamp = (day) => {
     return day * 24 * 60 * 60 * 1000;
 }
 
-
-
 export const getFirstDayWeek = (date) => {
     let { day } = getFullTime(date)
     let firstDay = date.getTime() - transformTimeStamp(day - 1);
     let week = new Date(firstDay).getDay()
     return {week , monthFirstDay: new Date(firstDay)};
+}
+
+
+export const getMonthDay = (date) => {
+    let { year, month } = getFullTime(date)
+   return  new Date(year, month + 1, 0).getDate()
 }
 
