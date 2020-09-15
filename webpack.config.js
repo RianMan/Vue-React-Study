@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = (env) => {
     //获取环境变量
     return {
-        entry:['./src/index.js'],
+        entry:['./react_study/index.js'],
         output:{
             path: path.join(__dirname,'dist'),
             filename:'main.js'
