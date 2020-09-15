@@ -6,13 +6,114 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
+<style>
+    .contianer{
+        border: 1px solid #dddee2;
+        border-radius:10px;
+        width: 300px;
+        height: 400px;
+        padding: 10px ;
+    }
+    
+    .title{
+        background-color: #f7f7f7;
+        color: #333;
+        height: 38px;
+        line-height: 38px;
+        z-index: 333;
+        position: relative;
+        padding-left: 10px;
+        box-sizing: border-box;
+    }
+    .content{
+        padding: 10px;
+    }
+    h4{
+        margin:0;
+    }
+    .slide-enter {
+    max-height: 0px;
+    }
+    /* 定义进入过渡生效时的状态。在整个进入过渡的阶段中应用，在元素被插入之前生效，在过渡/动画完成之后移除。这个类可以被用来定义进入过渡的过程时间，延迟和曲线函数。 */
+    .slide-enter-active {
+    transition: all 0.5s ease;
+    }
+    /*  2.1.8版及以上 定义进入过渡的结束状态。在元素被插入之后下一帧生效 (与此同时 v-enter 被移除)，在过渡/动画完成之后移除。 */
+    .slide-enter-to {
+    max-height: 1000px;
+    }
+    
+    /* 定义离开过渡的开始状态。在离开过渡被触发时立刻生效，下一帧被移除。 */
+    .slide-leave {
+    max-height: 1000px;
+    }
+    /* 定义离开过渡生效时的状态。在整个离开过渡的阶段中应用，在离开过渡被触发时立刻生效，在过渡/动画完成之后移除。这个类可以被用来定义离开过渡的过程时间，延迟和曲线函数。 */
+    .slide-leave-active {
+    transition: all 0.5s ease;
+    }
+    /*  2.1.8版及以上 定义离开过渡的结束状态。在离开过渡被触发之后下一帧生效 (与此同时 v-leave 被删除)，在过渡/动画完成之后移除。 */
+    .slide-leave-to {
+    max-height: 0px;
+    }
+</style>
 <body>
     <div id="app">
-        {{msg}}
-        <input type="text" v-model="msg">
+        <container>
+            <item title='title 1'>
+                content 1content 1content 1
+                content 1content 1content 1
+            </item>
+            <item title='title 2'>
+                content 2content 2content 2
+                content 2content 2content 2
+            </item>
+            <item title='title 3'>content 3</item>
+        </container>
     </div>
     <script src="../node_modules/vue/dist/vue.js"></script>
     <script>
+        Vue.component('container',{
+            data(){
+                return {}
+            },
+            methods:{
+                clickItem(id){
+                    this.$children.forEach((children)=>{
+                        if(children._uid === id){
+                            children.isShow = !children.isShow;
+                        }else{
+                            children.isShow = false
+                        }
+                    })
+                },
+            },
+            props:['msg'],
+            template:`<div class="contianer"> 
+                <slot></slot>
+            </div>`,
+        })
+        Vue.component('item',{
+            props:['title','content'],
+            data(){
+                return {
+                    isShow: false,
+                }
+            },
+            methods:{
+                handleClickTitle(id){
+                    this.$parent.clickItem(id);
+                    // this.isShow = !this.isShow;
+                }
+            },
+            template:`<div :id="_uid" class="item"> 
+                <div class="title" @click="handleClickTitle(_uid)"> {{ title }}</div>
+                <transition  name="slide">
+                    <div class="content" v-show="isShow" key='_uid'> 
+                        <slot></slot>
+                    </div>
+                </transition>
+            </div>`,
+        })
         const vm = new Vue({
             el: '#app',
             data: {
