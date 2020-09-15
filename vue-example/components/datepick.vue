@@ -24,7 +24,7 @@
                     </span>
                 </div>
             </div>
-            <div class="footer">
+            <div class="footer" @click="handleClickToday">
                 今天
             </div>
         </div>
@@ -70,31 +70,48 @@ export default {
         this.setRenderDateList();
     },
     methods:{
+        // 展示容器
         showDateContainer(){
             this.isShowDate = true;
         },
+        // 隐藏容器
         hideDateContainer(){
             this.isShowDate = false;
         },
+        // 根据索引获取时间对象
         getDateObj(i,j){
             return this.renderDateList[ (i-1) * 7 + (j -1)]
         },
+        // 点击选择时间
         handleSelectTime(val){
             this.renderVal = val;
             this.$emit('changeDate', val);
             this.isShowDate = false;
         },
+        // 点击今天的回调
+        handleClickToday(){
+             this.renderVal = new Date();
+        },
+        // 点击翻页
         handleClickPage(action){
-            // let { year, month, day} = utils.getFullTime(this.val);
+            let newTime;
             if(action === 'pre_year'){
-                let t = this.renderVal.getTime() - (365 * 24 * 60 * 60 * 1000);
-                this.renderVal = new Date(t)
+                newTime = this.renderVal.getTime() - (365 * 24 * 60 * 60 * 1000);
+            }
+            if(action === 'pre_month'){
+                let curMonthDay = utils.getMonthDay(this.renderVal);
+                newTime = this.renderVal.getTime() - (curMonthDay * 24 * 60 * 60 * 1000);
             }
             if(action === 'next_year'){
-                let t = this.renderVal.getTime() + (365 * 24 * 60 * 60 * 1000);
-                this.renderVal = new Date(t)
+                newTime = this.renderVal.getTime() + (365 * 24 * 60 * 60 * 1000);
             }
+            if(action === 'next_month'){
+                let curMonthDay = utils.getMonthDay(this.renderVal);
+                newTime = this.renderVal.getTime() + (curMonthDay * 24 * 60 * 60 * 1000);
+            }
+            this.renderVal = new Date(newTime);
         },
+        // 设置渲染的数据
         setRenderDateList(){
             let {week ,monthFirstDay} = utils.getFirstDayWeek(this.renderVal);
             let monthFirstDayTimeStamp  = monthFirstDay.getTime();
@@ -104,10 +121,11 @@ export default {
                 let date = monthFirstDayTimeStamp + utils.transformTimeStamp(index - week + 1);
                 let {year, month ,day} = utils.getFullTime(new Date(date));
                 let {year:y, month:m ,day:d} = utils.getFullTime(this.val);
+                let {month:m1 } = utils.getFullTime(this.renderVal);
                 this.renderDateList.push({
                     date: new Date(date),
                     day,
-                    isCurrentMonth: month === m,
+                    isCurrentMonth: month === m1,
                     isCurrentDay: year === y && month === m && day === d,
                 });
             }
