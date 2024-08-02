@@ -6,5 +6,4 @@
     3. 目录react-router-dom是原生react路由的一些实现思路目录
 
     4. redux是原始redux一些实现
-
-test
+test fetch
